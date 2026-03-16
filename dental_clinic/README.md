@@ -33,3 +33,31 @@ uvicorn main:app --reload   # API + Swagger: http://127.0.0.1:8000/docs
 ## Потік даних
 
 **Запит → Presentation (controllers/api) → Business (services) → Data Access (repositories) → БД**
+
+
+first step - python3 scripts/generate_csv.py - generate data
+
+sec step - python3 main.py - create db
+
+test orm logic - python3 main.py - echo true
+
+Swagger / API endpoints
+        │
+        ▼
+Presentation Layer
+(controllers / routes)
+        │
+        ▼
+Business Logic Layer
+(services)
+        │
+        ▼
+Data Access Layer
+(repositories + ORM)
+        │
+        ▼
+Database
+
+сенс розділення проєкту на рівні це про зручне читання і подальше маштабування, презентешн це про експіріенс з юзером, бізнес де загальна логіка проєкту, дата леєр це про використання базиданих
+
+sqlalchemy це про викориснна зрозумілих логічних запитів в проєкті замістт іспорт селект і тд

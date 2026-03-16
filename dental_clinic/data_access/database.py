@@ -11,7 +11,7 @@ _SessionLocal = None
 def get_engine():
     global _engine
     if _engine is None:
-        _engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=False)
+        _engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, echo=False) # echo=True - show all SQL queries
     return _engine
 
 

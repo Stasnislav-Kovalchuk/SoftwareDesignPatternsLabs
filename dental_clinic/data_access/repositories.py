@@ -20,6 +20,10 @@ class PatientRepository:
     def get_by_email(self, email: str) -> Optional[Patient]:
         return self._s.query(Patient).filter(Patient.email == email).first()
 
+    def get_all(self) -> list[Patient]:
+        """Повертає всіх пацієнтів (зручно для простих перевірок/тестів)."""
+        return self._s.query(Patient).all()
+
     def find_or_create(self, first_name: str, last_name: str, phone: str, email: str) -> Patient:
         p = self.get_by_email(email)
         if p:

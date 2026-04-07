@@ -1,6 +1,9 @@
 """Data Access Layer — репозиторії."""
-from typing import Optional
+from __future__ import annotations
+
+from typing import Optional, List
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from data_access.models import (
     Patient, Dentist, Appointment, Visit,
@@ -17,11 +20,20 @@ class PatientRepository:
         self._s.flush()
         return patient
 
+    def get_by_id(self, patient_id: int) -> Optional[Patient]:
+        return self._s.get(Patient, patient_id)
+
     def get_by_email(self, email: str) -> Optional[Patient]:
         return self._s.query(Patient).filter(Patient.email == email).first()
 
-    def get_all(self) -> list[Patient]:
-        """Повертає всіх пацієнтів (зручно для простих перевірок/тестів)."""
+    def list_patients(self, limit: int = 50, offset: int = 0) -> List[Patient]:
+        return self._s.query(Patient).offset(offset).limit(limit).all()
+
+    def count(self) -> int:
+        return int(self._s.query(func.count(Patient.id)).scalar() or 0)
+
+    def get_all(self) -> List[Patient]:
+        """Для простих перевірок/тестів."""
         return self._s.query(Patient).all()
 
     def find_or_create(self, first_name: str, last_name: str, phone: str, email: str) -> Patient:
@@ -29,6 +41,15 @@ class PatientRepository:
         if p:
             return p
         return self.add(Patient(first_name=first_name, last_name=last_name, phone=phone, email=email))
+
+    def update(self, patient: Patient) -> Patient:
+        self._s.add(patient)
+        self._s.flush()
+        return patient
+
+    def delete(self, patient: Patient) -> None:
+        self._s.delete(patient)
+        self._s.flush()
 
 
 class DentistRepository:

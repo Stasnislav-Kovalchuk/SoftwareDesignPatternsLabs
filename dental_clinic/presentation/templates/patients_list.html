@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="row">
+      <h2 style="margin: 0;">Пацієнти</h2>
+      <span class="muted">Всього: {{ total }}</span>
+      <div class="spacer"></div>
+      <a class="btn primary" href="/ui/patients/new">Додати пацієнта</a>
+      <form method="post" action="/import" style="margin:0;">
+        <button class="btn" type="submit">Імпорт CSV</button>
+      </form>
+    </div>
+    <p class="muted" style="margin-top: 8px;">Відображення даних з БД (SQLite) через бізнес‑шар.</p>
+
+    <div class="row" style="margin: 10px 0 14px;">
+      <div class="muted">Показано {{ offset + 1 }}–{{ (offset + patients|length) if patients|length > 0 else offset }} з {{ total }}</div>
+      <div class="spacer"></div>
+      <a class="btn" href="/ui/patients?limit={{ limit }}&offset={{ prev_offset }}">← Назад</a>
+      <a class="btn" href="/ui/patients?limit={{ limit }}&offset={{ next_offset }}">Далі →</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Імʼя</th>
+          <th>Прізвище</th>
+          <th>Телефон</th>
+          <th>Email</th>
+          <th>Дії</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in patients %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.first_name }}</td>
+          <td>{{ p.last_name }}</td>
+          <td>{{ p.phone }}</td>
+          <td>{{ p.email }}</td>
+          <td>
+            <div class="row" style="gap:8px;">
+              <a class="btn" href="/ui/patients/{{ p.id }}/edit">Редагувати</a>
+              <form method="post" action="/ui/patients/{{ p.id }}/delete" style="margin:0;" onsubmit="return confirm('Видалити пацієнта?');">
+                <button class="btn danger" type="submit">Видалити</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+

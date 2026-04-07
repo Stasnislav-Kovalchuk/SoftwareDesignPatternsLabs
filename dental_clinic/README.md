@@ -1,4 +1,13 @@
-# Dental Clinic — 3 рівні архітектура
+# Dental Clinic Management System — Лабораторна 3 (MVC) + 3‑рівнева архітектура
+
+## Мета роботи
+
+Створити веб‑додаток за шаблоном **MVC**, який за запитом користувача **візуалізує дані предметної області** “Стоматологічна клініка” (з ЛР1), та підтримує **CRUD** (додавання/редагування/видалення).
+
+Архітектурно застосовано **3 рівні**:
+- **Presentation Layer** — взаємодія з користувачем (HTML/HTTP контролери)
+- **Business Logic Layer** — прикладна логіка (сервіси)
+- **Data Access Layer** — ORM/репозиторії/SQLite
 
 ```
 dental_clinic/
@@ -20,6 +29,35 @@ dental_clinic/
 └── requirements.txt
 ```
 
+## Лабораторна 3 (MVC веб‑додаток)
+
+### Основна сутність
+
+**Patient** (Пацієнт) — основна сутність предметної області для демонстрації CRUD.
+
+### MVC відповідність
+
+- **Model**: `data_access/` (ORM + репозиторії) + бізнес‑сервіс `business/patient_service.py`
+- **View**: `presentation/templates/*.html` (HTML сторінки)
+- **Controller**: `presentation/api.py` (маршрути, що викликають бізнес‑логіку)
+
+### CRUD (HTML)
+
+- Список: `GET /ui/patients`
+- Додати: `GET /ui/patients/new` + `POST /ui/patients/new`
+- Редагувати: `GET /ui/patients/{id}/edit` + `POST /ui/patients/{id}/edit`
+- Видалити: `POST /ui/patients/{id}/delete`
+
+## Як це працює (логіка MVC)
+
+1) **View (HTML)** відображає дані й відправляє форми (POST) на контролер.  
+2) **Controller** (`presentation/api.py`) приймає запит і викликає **бізнес‑сервіс** `PatientService`.  
+3) **Business** (`business/patient_service.py`) виконує логіку CRUD і працює з даними через **репозиторій**.  
+4) **Repository** (`data_access/repositories.py`) виконує операції з БД через `Session`.  
+5) **ORM/SQLite** (`data_access/models.py`, `data_access/database.py`) зберігає та повертає дані.
+
+Таке розділення підвищує читабельність, тестованість і спрощує масштабування.
+
 ## Запуск
 
 ```bash
@@ -30,18 +68,34 @@ python main.py              # імпорт CSV
 uvicorn main:app --reload   # API + Swagger: http://127.0.0.1:8000/docs
 ```
 
-## Потік даних
+## Рекомендований сценарій демонстрації
 
-**Запит → Presentation (controllers/api) → Business (services) → Data Access (repositories) → БД**
+1) (Опціонально) Згенерувати тестовий CSV (1000+ рядків):
 
+```bash
+python3 scripts/generate_csv.py
+```
 
-first step - python3 scripts/generate_csv.py - generate data
+2) Імпортувати CSV у SQLite (створить/оновить `dental_clinic.db`):
 
-sec step - python3 main.py - create db
+```bash
+python main.py
+```
 
-test orm logic - python3 main.py - echo true
+3) Запустити веб‑додаток:
 
-Swagger / API endpoints
+```bash
+uvicorn main:app --reload
+```
+
+4) Відкрити в браузері:
+- **MVC HTML (візуалізація + CRUD)**: `http://127.0.0.1:8000/ui/patients`
+- **Swagger (API)**: `http://127.0.0.1:8000/docs`
+
+## Потік даних (3 рівні)
+
+```
+Browser (HTML View) / Swagger
         │
         ▼
 Presentation Layer
@@ -56,8 +110,9 @@ Data Access Layer
 (repositories + ORM)
         │
         ▼
-Database
+SQLite Database
+```
 
-сенс розділення проєкту на рівні це про зручне читання і подальше маштабування, презентешн це про експіріенс з юзером, бізнес де загальна логіка проєкту, дата леєр це про використання базиданих
+## Чому SQLAlchemy ORM
 
-sqlalchemy це про викориснна зрозумілих логічних запитів в проєкті замістт іспорт селект і тд
+SQLAlchemy дозволяє працювати з даними як з **об’єктами Python (ORM)**, а не писати SQL‑запити в контролерах. Це зменшує зв’язність коду та спрощує підтримку.

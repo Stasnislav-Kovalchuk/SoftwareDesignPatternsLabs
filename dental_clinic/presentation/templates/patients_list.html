@@ -10,6 +10,9 @@
       <form method="post" action="/import" style="margin:0;">
         <button class="btn" type="submit">Імпорт CSV</button>
       </form>
+      <form method="post" action="/import/reset" style="margin:0;" onsubmit="return confirm('Це очистить БД і завантажить CSV заново. Продовжити?');">
+        <button class="btn danger" type="submit">Reset + Import</button>
+      </form>
     </div>
     <p class="muted" style="margin-top: 8px;">Відображення даних з БД (SQLite) через бізнес‑шар.</p>
 
@@ -18,6 +21,7 @@
       <div class="spacer"></div>
       <a class="btn" href="/ui/patients?limit={{ limit }}&offset={{ prev_offset }}">← Назад</a>
       <a class="btn" href="/ui/patients?limit={{ limit }}&offset={{ next_offset }}">Далі →</a>
+      <a class="btn" href="/generate">Generate</a>
     </div>
 
     <table>

@@ -1,0 +1,12 @@
+{
+  "input": {
+    "file": "data/sample_lines.txt"
+  },
+  "output": {
+    "type": "kafka"
+  },
+  "kafka": {
+    "bootstrap_servers": "localhost:9092",
+    "topic": "lab4-strategy-output"
+  }
+}

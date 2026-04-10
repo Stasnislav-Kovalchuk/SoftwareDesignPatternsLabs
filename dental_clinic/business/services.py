@@ -8,6 +8,7 @@ from typing import List, Tuple, Optional
 from data_access import (
     get_session,
     init_db,
+    reset_db,
     Patient,
     Dentist,
     Appointment,
@@ -132,3 +133,9 @@ def import_csv(file_path: Path) -> Tuple[int, int, List[str]]:
 def run_import(csv_path: Path) -> dict:
     processed, failed, errors = import_csv(csv_path)
     return {"processed": processed, "failed": failed, "total_rows": processed + failed, "errors": errors}
+
+
+def run_reset_and_import(csv_path: Path) -> dict:
+    """Очистити БД і виконати імпорт заново (щоб в адмінці було видно нові дані)."""
+    reset_db()
+    return run_import(csv_path)

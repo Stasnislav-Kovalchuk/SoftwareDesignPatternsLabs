@@ -24,3 +24,9 @@ def get_session():
 
 def init_db():
     Base.metadata.create_all(bind=get_engine())
+
+
+def reset_db():
+    """Повне очищення схеми (drop + create). Використовувати для демо/тестових даних."""
+    Base.metadata.drop_all(bind=get_engine())
+    Base.metadata.create_all(bind=get_engine())

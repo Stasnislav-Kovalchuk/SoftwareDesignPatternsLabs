@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from data_access import init_db, get_session, Patient
 from data_access.repositories import PatientRepository
 from business.patient_service import PatientService, PatientCreate, PatientUpdate
-from presentation.controllers import run_import_from_data_folder
+from presentation.controllers import run_import_from_data_folder, run_reset_import_from_data_folder
 
 
 @asynccontextmanager
@@ -70,6 +70,13 @@ def list_patients(db: Session = Depends(get_db)):
 def import_csv_endpoint():
     """Імпорт з data/dental_data.csv."""
     result = run_import_from_data_folder()
+    return ImportResult(**result)
+
+
+@app.post("/import/reset", response_model=ImportResult)
+def reset_and_import_csv_endpoint():
+    """Очистити БД і імпортувати CSV заново (щоб бачити нові дані після генерації)."""
+    result = run_reset_import_from_data_folder()
     return ImportResult(**result)
 
 

@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "dental_data.csv"
 NUM_ROWS = 1050
+RUN_TAG = datetime.now().strftime("%Y%m%d%H%M%S")
 
 FIRST_NAMES = [
     "Олександр", "Дмитро", "Андрій", "Максим", "Сергій", "Олег", "Іван", "Михайло",
@@ -63,7 +64,9 @@ def random_phone():
 
 def random_email(first: str, last: str, n: int):
     base = f"{first.lower()}.{last.lower()}".replace("'", "")
-    return f"{base}{n}@example.com"
+    # RUN_TAG гарантує нові email-и при кожному запуску генератора,
+    # щоб при імпорті було видно нових пацієнтів в адмін‑панелі.
+    return f"{base}.{RUN_TAG}.{n}@example.com"
 
 
 def random_date():
@@ -82,7 +85,7 @@ def main():
         "procedure_name", "procedure_cost", "payment_amount",
     ]
     with open(OUTPUT_PATH, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=columns)
+        writer = csv.DictWriter(f, fieldnames=columns, delimiter=";")
         writer.writeheader()
         for i in range(NUM_ROWS):
             first = random.choice(FIRST_NAMES)

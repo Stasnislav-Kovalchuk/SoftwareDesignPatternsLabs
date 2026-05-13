@@ -10,22 +10,22 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from presentation.controllers import run_import_from_data_folder
+from presentation.app_config import load_app_config
 from presentation.api import app
+from presentation.import_report import format_import_report
+from presentation.output_strategies import build_output_strategy
 
 
 def main():
+    cfg = load_app_config(Path(__file__).resolve().parent / "config.json")
     result = run_import_from_data_folder()
-    print("Dental Clinic — CSV Import")
-    print("=" * 50)
-    print(f"Processed: {result['processed']}, Failed: {result['failed']}, Total: {result['total_rows']}")
-    if result["errors"]:
-        for e in result["errors"][:20]:
-            print(f"  - {e}")
-        if len(result["errors"]) > 20:
-            print(f"  ... +{len(result['errors']) - 20} more")
-    else:
-        print("OK.")
-    print("=" * 50)
+    lines = format_import_report(result)
+
+    strategy = build_output_strategy(cfg)
+    try:
+        strategy.write_lines(lines)
+    finally:
+        strategy.close()
 
 
 if __name__ == "__main__":

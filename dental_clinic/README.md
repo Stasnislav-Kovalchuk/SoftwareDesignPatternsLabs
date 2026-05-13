@@ -68,6 +68,16 @@ python main.py              # імпорт CSV
 uvicorn main:app --reload   # API + Swagger: http://127.0.0.1:8000/docs
 ```
 
+## Лабораторна 4 (GoF Strategy): вивід результатів імпорту
+
+Вивід рядків винесено в **Strategy** (console/kafka) і перемикається **лише через конфіг**:
+
+- За замовчуванням використовується `dental_clinic/config.json` (`output.type = console`)
+- Щоб переключити на Kafka — заміни `config.json` на `config.kafka.json`
+  (або в `config.json` встанови `output.type = kafka` і заповни секцію `kafka`)
+
+Опційно можна вказати інший конфіг через `DENTAL_CLINIC_CONFIG=/path/to/config.json`.
+
 ## Рекомендований сценарій демонстрації
 
 1) (Опціонально) Згенерувати тестовий CSV (1000+ рядків):

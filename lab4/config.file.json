@@ -1,0 +1,23 @@
+{
+  "input": {
+    "type": "file",
+    "file": "../dental_clinic/data/dental_data.csv",
+    "max_rows": 50,
+    "delimiter": ";"
+  },
+  "output": {
+    "type": "console",
+    "file_path": "output_data.json",
+    "file_format": "jsonl",
+    "kafka": {
+      "bootstrap_servers": "127.0.0.1:9092",
+      "topic": "dental-clinic-csv-preview"
+    },
+    "redis": {
+      "host": "127.0.0.1",
+      "port": 6379,
+      "db": 0,
+      "list_key": "lab4:data"
+    }
+  }
+}

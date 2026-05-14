@@ -1,9 +1,4 @@
 {
-  "output": {
-    "type": "kafka"
-  },
-  "kafka": {
-    "bootstrap_servers": "localhost:9092",
-    "topic": "dental-clinic-import-report"
-  }
+  "output": { "type": "console" },
+  "kafka": { "bootstrap_servers": "localhost:9092", "topic": "dental-clinic-import-report" }
 }
